@@ -1,7 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import sys
 import os
-
+from hashing import hashing
 app = Flask(__name__)
 
 
@@ -22,7 +22,11 @@ def login():
 
 @app.route("/login-data")
 def login_dat():
-    return "Hi. Great thing."
+    if request.args.get("username") == "santi":
+        if hashing(request.args.get("password")) == hashing("nepexd"):
+            return "Hola Santi"
+        return "jajaja, fallaste"
+    return str(hashing(request.args.get("password")))
 
 
 print(sys.argv)
