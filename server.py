@@ -2,7 +2,9 @@ from flask import Flask, render_template, request
 import sys
 import os
 from hashing import hashing
+from user import User
 app = Flask(__name__)
+users = set()
 
 
 @app.route("/index.html")
@@ -22,11 +24,20 @@ def login():
 
 @app.route("/login-data")
 def login_dat():
-    if request.args.get("username") == "santi":
-        if hashing(request.args.get("password")) == hashing("nepexd"):
-            return "Hola Santi"
-        return "jajaja, fallaste"
-    return str(hashing(request.args.get("password")))
+    for user in users:
+
+        if request.args.get("username") == user.name:
+            if hashing(request.args.get("password")) == hashing(user.password):
+                # return "Hola {}".format(user.name)
+                return str(users)
+
+            return "jajaja, fallaste"
+
+
+def create_user(name, password):
+    user = User(name, password)
+
+    users.add(user)
 
 
 print(sys.argv)
@@ -41,5 +52,6 @@ else:
     exit()
 
 os.system("python3 public_html/santi/create_htacess.py --port {}".format(port))
+create_user("Santi", "loco")
 
 app.run(host="0.0.0.0", port=port, debug=False)
