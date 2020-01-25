@@ -3,6 +3,7 @@ import sys
 import os
 from hashing import hashing
 from user import User
+from dog_generator import dog_generator
 app = Flask(__name__)
 users = set()
 
@@ -20,6 +21,18 @@ def login():
    # file.close()
    # return contents
     return render_template("login.html", bg_colour="red", url="/santi/login-data")
+
+
+@app.route("/doggos")
+def doggos():
+    return render_template("dogs.html")
+
+
+@app.route("/dog_url_dont_open")
+def hidden_dog_function():
+    next_data = next(dog_generator)
+    del next_data["fileSizeBytes"]
+    return next_data
 
 
 @app.route("/login-data")
@@ -51,7 +64,7 @@ else:
     print("No port aregument was given")
     exit()
 
-os.system("python3 public_html/santi/create_htacess.py --port {}".format(port))
+os.system("python3 Server_Santi/create_htacess.py --port {}".format(port))
 create_user("Santi", "loco")
 
 app.run(host="0.0.0.0", port=port, debug=False)
